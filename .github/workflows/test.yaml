@@ -1,24 +1,24 @@
-on: [push, pull_request]
-name: Test
-jobs:
-  test:
-    strategy:
-      matrix:
-        go-version: [1.13.x]
-        platform: [ubuntu-latest]
-    runs-on: ${{ matrix.platform }}
-    steps:
-      - name: Install Go
-        uses: actions/setup-go@v1
-        with:
-          go-version: ${{ matrix.go-version }}
-      - name: Checkout code
-        uses: actions/checkout@v1
-      - name: Test
-        run: |
-          echo "${{ secrets.creds }}" | base64 -d > /tmp/account.json
-          ls -al /tmp/account.json
-          go test -mod=vendor ./...
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: /tmp/account.json
-          BIGQUERY_CONNECTION_STRING: ${{ secrets.connectionString }}
+#on: [push, pull_request]
+#name: Test
+#jobs:
+#  test:
+#    strategy:
+#      matrix:
+#        go-version: [1.13.x]
+#        platform: [ubuntu-latest]
+#    runs-on: ${{ matrix.platform }}
+#    steps:
+#      - name: Install Go
+#        uses: actions/setup-go@v1
+#        with:
+#          go-version: ${{ matrix.go-version }}
+#      - name: Checkout code
+#        uses: actions/checkout@v1
+#      - name: Test
+#        run: |
+#          echo "${{ secrets.creds }}" | base64 -d > /tmp/account.json
+#          ls -al /tmp/account.json
+#          go test -mod=vendor ./...
+#        env:
+#          GOOGLE_APPLICATION_CREDENTIALS: /tmp/account.json
+#          BIGQUERY_CONNECTION_STRING: ${{ secrets.connectionString }}

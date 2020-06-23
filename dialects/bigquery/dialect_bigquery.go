@@ -5,12 +5,13 @@ import (
 	"context"
 	"fmt"
 	_ "github.com/infobloxopen/protoc-gen-gorm/types"
+	"google.golang.org/api/option"
 
 	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
-	_ "github.com/solcates/go-sql-bigquery"
-	bigquery "github.com/solcates/go-sql-bigquery"
+	_ "github.com/tozh/go-sql-bigquery"
+	bigquery "github.com/tozh/go-sql-bigquery"
 	"google.golang.org/api/googleapi"
 	"os"
 	"reflect"
@@ -40,11 +41,17 @@ func init() {
 func getClient() (*bigquery2.Client, *bigquery.Config) {
 	uri := os.Getenv(bigquery.ConnectionStringEnvKey)
 
+	serviceAccountFile := os.Getenv("GOOGLE_APPLICATION_CREDENTIALS")
+
+	var clientOptions []option.ClientOption
+	if serviceAccountFile != "" {
+		clientOptions = append(clientOptions, option.WithCredentialsFile(serviceAccountFile))
+	}
 	cfg, err := bigquery.ConfigFromConnString(uri)
 	if err != nil {
 		panic(err)
 	}
-	client, err := bigquery2.NewClient(context.TODO(), cfg.ProjectID)
+	client, err := bigquery2.NewClient(context.TODO(), cfg.ProjectID, clientOptions...)
 	if err != nil {
 		panic(err)
 	}
